@@ -1,7 +1,27 @@
 import { useKindeAuth } from "@kinde-oss/kinde-auth-react";
+import { useEffect } from "react";
 
 export default function LoggedOut() {
   const { login, register } = useKindeAuth();
+  const { getToken } = useKindeAuth();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const accessToken = await getToken();
+        const res = await fetch(`http://localhost:5000`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+        const { data } = await res.json();
+        console.log({ data });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <>
       <header>
@@ -22,7 +42,7 @@ export default function LoggedOut() {
         <div className="container">
           <div className="card hero">
             <p className="text-display-1 hero-title">
-              Let's start authenticating <br /> with KindeAuth
+              start authenticating <br /> with KindeAuth
             </p>
             <p className="text-body-1 hero-tagline">Configure your app</p>
 
